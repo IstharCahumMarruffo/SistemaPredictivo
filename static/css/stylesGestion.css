@@ -1,0 +1,70 @@
+.container {
+    display: grid;
+    grid-template-areas:
+        "header header header"
+        "izq centro der"
+        "footer footer footer";
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 200px 1fr 200px;
+    gap: 10px;
+    border-style: solid;
+    border-color: pink;
+    min-height: 100vh; /* Asegura que la cuadrícula tenga suficiente altura */
+}
+
+.header {
+    grid-area: header;
+    border-style: solid;
+    border-color: pink;
+    text-align: center;
+}
+
+.izq {
+    grid-area: izq;
+    border-style: solid;
+    border-color: pink;
+   
+}
+
+.centro {
+    grid-area: centro;
+    border-style: solid;
+    border-color: pink;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.der {
+    grid-area: der;
+    border-style: solid;
+    border-color: pink;
+    gap: 20px;
+}
+
+.footer {
+    grid-area: footer;
+    border-style: solid;
+    border-color: pink;
+    text-align: center;
+    background-color: #333;
+    align-content: center;
+}
+
+iframe{
+    display: flex;
+    align-items: center;
+    align-content: center;
+    margin-top: 30px;
+}
+
+.bot{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.bt :hover{
+    color: pink;
+}

@@ -1,0 +1,70 @@
+.container {
+    display: grid;
+    grid-template-areas:
+        "header header header"
+        "izq centro der"
+        "footer footer footer";
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 200px 1fr 200px;
+    gap: 10px;
+    /*border-style: solid;
+    border-color: pink;*/
+    min-height: 100vh; /* Asegura que la cuadrícula tenga suficiente altura */
+}
+
+.header {
+    display: flex;
+    grid-area: header;
+    /*border-style: solid;
+    border-color: pink;*/
+    height: 80px;
+    text-align: center;
+    gap: 20px;
+}
+
+.izq {
+    grid-area: izq;
+  /*  border-style: solid;
+    border-color: pink;*/
+   
+}
+
+.centro {
+    grid-area: centro;
+   /* border-style: solid;
+    border-color: pink;*/
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.der {
+    grid-area: der;
+   /* border-style: solid;
+    border-color: pink;*/
+    gap: 20px;
+}
+
+.footer {
+    grid-area: footer;
+    /*border-style: solid;
+    border-color: pink;*/
+    text-align: center;
+    background-color: #333;
+    align-content: center;
+}
+
+.filtros{
+    display: flex;
+    flex-direction: column;
+    gap: 200px;
+
+}
+
+.sesion{
+    display: flex;
+    margin-left: 100px;
+    gap: 100 px;
+}
+

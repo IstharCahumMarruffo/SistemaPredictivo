@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Desertores</title>
+    <link rel="stylesheet" href="static/css/formulario.css">
+</head>
+<body>
+    <form action="/academico" method="post">
+        <h2>Información Académica</h2>
+        <label>Año de ingreso:</label>
+        <input type="number" name="p2a">
+        <br>
+        <label>Puntaje de admisión:</label>
+        <input type="number" name="p4">
+        <br>
+        <label>¿Cuál es el promedio que obtuviste en la secundaria?</label>
+        <input type="number" name="p5">
+        <br>
+        <label>¿A qué tipo de secundaria asistías?</label>
+        <select name="p6">
+            <option value="1">Pública</option>
+            <option value="2">Privada</option>
+        </select>
+        <br>
+        <label>¿Cuántas veces cambiaste de escuela?</label>
+        <select name="p7">
+            <option value="1">Una vez</option>
+            <option value="2">Dos veces</option>
+            <option value="3">Tres o más veces</option>
+            <option value="4">Ninguna vez</option>
+        </select>
+        <br>
+        <label>¿Cuántas horas te toma llegar a la escuela?</label>
+        <input type="number" name="p10h">
+        <br>
+        <label>¿Cuántos minutos te toma llegar a la escuela?</label>
+        <input type="number" name="p10m">
+        <br>
+        <h2>Motivos de ingreso</h2>
+        <label>¿Por qué elegiste esta escuela?</label>
+        <select name="p11_1">
+            <option value="1">El plan de estudio</option>
+            <option value="2">Las instalaciones</option>
+            <option value="3">Ubicación</option>
+            <option value="4">Familiares estudiaron ahí</option>
+            <option value="5">Amigos estudiaron ahí</option>
+            <option value="6">Buenos maestros</option>
+            <option value="7">Recomendación</option>
+            <option value="8">Gratuita</option>
+            <option value="9">Colegiaturas accesibles</option>
+            <option value="10">Prestigio</option>
+            <option value="11">Decisión de los padres</option>
+            <option value="12">Me asignaron esa escuela</option>
+            <option value="13">Otra</option>
+            <option value="14">Ninguna</option>
+        </select>
+        <br>
+        <h2>Asistencia y rendimiento</h2>
+        <label>Frecuencia de asistencia:</label>
+        <select name="p14">
+            <option value="1">Siempre asistía</option>
+            <option value="2">Asistencia regular</option>
+            <option value="3">Faltaba con frecuencia</option>
+            <option value="4">Faltaba mucho</option>
+        </select>
+        <br>
+        <label>Promedio último año:</label>
+        <input type="number" name="p15" value="-1">
+        <br>
+
+        <label>Índice de aprobación:</label>
+        <select name="p16">
+            <option value="1">Nunca reprobé</option>
+            <option value="2">Alguna vez reprobé</option>
+            <option value="3">Reprobé varias pero seguí inscrito</option>
+            <option value="4">Reprobé más de lo permitido</option>
+        </select>
+        <br>
+        <label>Por favor piensa en tu grupo del último año que cursaste la preparatoria,
+            bachillerato o carrera técnica y dime cuál de las frases describe mejor tu desempeño en ese periodo</label>
+        <select name="p17">
+            <option value="1">Mi promedio era uno de los más altos de la clase</option>
+            <option value="2">Mi promedio era alto, pero no era uno de los
+                mejores de la clase</option>
+            <option value="3">Mi promedio no era ni alto ni bajo</option>
+            <option value="4">Mi promedio era bajo, pero no era uno de los
+                peores</option>
+            <option value="5">Mi promedio era uno de los más bajos de la clase</option>
+        </select>
+        <br>
+        <label>¿Tienes alguna beca?<select name="p18">
+            <option value="1">Sí</option>
+            <option value="2">No</option>
+        </select>
+        <br>
+        <h2>Apoyo recibido</h2>
+        <label>¿cuánta confianza tienes para recurrir al director en caso de problemas?</label>
+        <select name="p13_1">
+            <option value="1">Mucha</option>
+            <option value="2">Algo</option>
+            <option value="3">Poca</option>
+            <option value="4">Nada</option>
+        </select>
+        <br>
+        <label>¿cuánta confianza tienes para recurrir a profesores en caso de problemas?</label>
+        <select name="p13_2">
+            <option value="1">Mucha</option>
+            <option value="2">Algo</option>
+            <option value="3">Poca</option>
+            <option value="4">Nada</option>
+        </select>
+        <br>
+        <label>¿cuánta confianza tienes para recurrir a prefectos en caso de problemas?</label>
+        <select name="p13_3">
+            <option value="1">Mucha</option>
+            <option value="2">Algo</option>
+            <option value="3">Poca</option>
+            <option value="4">Nada</option>
+        </select>
+        <br>
+        <br>
+        <label>Tienes problemas para entenderle a los maestros</label>
+        <select name="p24_7">
+            <option value="1">Sí</option>
+            <option value="2">No</option>
+        </select>
+        <br>
+        <label>La escuela te queda muy lejos</label>
+        <select name="p24_8">
+            <option value="1">Sí</option>
+            <option value="2">No</option>
+        </select>
+        <br>
+
+        <input type="submit" value="Enviar">
+    </form>
+</body>
+</html>
+
