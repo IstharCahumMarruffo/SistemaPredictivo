@@ -10,12 +10,10 @@ import joblib
 import sys
 import os
 
-# Cargar función externa
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from limpieza import cargar_datos_personales
 
 def entrenar_modelo_personal():
-    # Cargar datos
     df = cargar_datos_personales()
     if df is None:
         print("No se pudieron cargar los datos.")
@@ -31,29 +29,25 @@ def entrenar_modelo_personal():
     df_personal = df_personal.dropna()
 
     df_personal["estado"] = df_personal["f21"].map({1: 1, 2: 0})
-    print(df_personal['estado'].value_counts())
+    #print(df_personal['estado'].value_counts())
 
     X = df_personal[variables_personales]
     y = df_personal["estado"]
 
-    # Aplicar SMOTE
     smote = SMOTE(random_state=42)
     X_res, y_res = smote.fit_resample(X, y)
 
     modelo = DecisionTreeClassifier(random_state=42)
 
-    # Validación cruzada
     scores = cross_val_score(modelo, X_res, y_res, cv=5, scoring='accuracy')
     print("=== Resultados de la validación cruzada ===")
     print(f"Precisión en cada pliegue: {scores}")
     print(f"Precisión media: {scores.mean():.4f}")
     print(f"Desviación estándar: {scores.std():.4f}")
 
-    # Entrenamiento y prueba simple
     X_train, X_test, y_train, y_test = train_test_split(X_res, y_res, test_size=0.2, random_state=42)
     modelo.fit(X_train, y_train)
-
-    # Probabilidades y umbral óptimo
+    """
     probas = modelo.predict_proba(X_test)[:, 1]
     fpr, tpr, thresholds = roc_curve(y_test, probas)
     youden_index = tpr - fpr
@@ -86,8 +80,7 @@ def entrenar_modelo_personal():
     plt.title("Curva ROC")
     plt.legend(loc="lower right")
     plt.show()
-
-    # Guardar modelo
+    """
     joblib.dump(modelo, 'modelo_personal.pkl')
     return modelo
 

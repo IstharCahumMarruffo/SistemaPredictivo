@@ -16,31 +16,25 @@ def entrenar_modelo_general():
     if df is None:
         print("No se pudieron cargar los datos.")
         return
-    # Definir las características (X) y l variable objetivo (y)
-    X = df[['f8e_1', 's1', 'p15']]  # Variables predictoras
+    X = df[['f8e_1', 's1', 'p15', 'p24_1']]  
     df["estado"] = df["f21"].map({1: 1, 2: 0})
-    y = df["estado"]  # Variable objetivo (0 = no desertó, 1 = desertó)
+    y = df["estado"] 
 
-    # Dividir los datos en entrenamiento y prueba
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    # Entrenar el modelo de regresión logística
     modelo_g = LogisticRegression()
     modelo_g.fit(X_train, y_train)
 
-    # Hacer predicciones y evaluar el modelo
     y_pred = modelo_g.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
 
     print(f'Accuracy del modelo: {accuracy:.2f}')
 
 
-# Matriz de Confusión
     cm = confusion_matrix(y_test, y_pred)
     print("Matriz de Confusión:")
     print(cm)
 
-# Reporte de clasificación
     report = classification_report(y_test, y_pred)
     print("Reporte de Clasificación:")
     print(report)

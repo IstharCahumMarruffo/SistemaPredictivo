@@ -4,9 +4,10 @@ from rendimiento import grafico
 from flask_sqlalchemy import SQLAlchemy
 from models import db, DatosConcluidos
 import pandas as pd  # Asegúrate de importar pandas para manejar DataFrame
-from analisis.modelo_academico3 import entrenar_modelo_academico
+from analisis.modelo_academico import entrenar_modelo_academico
 from analisis.modelo_personales import entrenar_modelo_personal
 from analisis.modelo_general import entrenar_modelo_general
+from analisis.estadisticas_generales import generar_estadisticas
 from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
@@ -19,35 +20,29 @@ modelo_g = entrenar_modelo_general()
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        # Asegurarse de que los datos tengan las columnas correctas
         data = {
             'f8e_1': request.form.get('f8e_1'),
             's1': request.form.get('s1'),
-            'p15': request.form.get('p15')
+            'p15': request.form.get('p15'),
+            'p24_1': request.form.get('p24_1')
         }
 
-        # Convertir los datos en un DataFrame
         df_data = pd.DataFrame([data])
 
-        # Asegurarse de que las columnas estén en el mismo orden que cuando se entrenó el modelo
-        df_data = df_data[['f8e_1', 's1', 'p15']]  # Asegurarse de que el orden sea el mismo
+        df_data = df_data[['f8e_1', 's1', 'p15', 'p24_1']] 
 
-        # Realizar la predicción usando el modelo cargado
         prediccion = modelo_g.predict(df_data)
 
-        # 0 = No desertó, 1 = Desertó
-        resultado = "Riesgo de deserción" if prediccion[0] == 1 else "Sin riesgo de deserción"
-        return render_template('index.html', resultado=resultado)
+        resultado = "⚠️ El estudiante tiene alto riesgo de deserción." if prediccion[0] == 1 else "✅Sin riesgo de deserción"
+        return redirect(url_for('resultadoG', resultado=resultado))
 
     return render_template('index.html', resultado=None)
     
     
-# Ruta principal con gráfico y predicción
 modelo = entrenar_modelo_academico()
 @app.route('/academico', methods=['GET', 'POST'])
 def academico():
     if request.method == 'POST':
-        # Recibir los datos del formulario
         data = {
             'p2a': request.form.get('p2a'),
             'p4': request.form.get('p4'),
@@ -70,25 +65,21 @@ def academico():
         }
         print("Datos recibidos:", data)
         
-        # Convertir en DataFrame
         input_data = pd.DataFrame([data])
-
-        # Hacer la predicción (obteniendo las probabilidades)
        
         prediction_proba = modelo.predict_proba(input_data)
         probabilidad = prediction_proba[0][1]
         if probabilidad >= 0.8:
-            result = f"⚠️ Riesgo muy alto de deserción (prob: {probabilidad:.2f})"
+            result = f"⚠️ Riesgo muy alto de deserción )"
         elif probabilidad >= 0.6:
-            result = f"⚠️ Riesgo moderado de deserción (prob: {probabilidad:.2f})"
+            result = f"⚠️ Riesgo moderado de deserción )"
         else:
-            result = f"✅ Riesgo bajo de deserción (prob: {probabilidad:.2f})"
+            result = f"✅ Riesgo bajo de deserción )"
 
         
         print("Probabilidad de deserción (clase 1):", prediction_proba[0][1])
         print("Resultado:", result)
         
-        # Redirigir a la página de resultado con el valor
         return redirect(url_for('resultado', resultado=result))
 
     return render_template('gestion.html')
@@ -98,7 +89,6 @@ modeloP = entrenar_modelo_personal()
 @app.route('/personal', methods=['GET', 'POST'])
 def personal():
     if request.method == 'POST':
-        # Recibir los datos del formulario
         data = {
             's1': request.form.get('s1'),
             'p12_1': request.form.get('p12_1', 0),
@@ -138,42 +128,41 @@ def personal():
         }
         print("Datos recibidos:", data)
         
-        # Convertir en DataFrame
         input_data = pd.DataFrame([data])
 
-        # Hacer la predicción (obteniendo las probabilidades)
        
         prediction_proba = modeloP.predict_proba(input_data)
 
-        # Establecer el umbral de decisión, por ejemplo, 0.6 para que sea alto riesgo si la probabilidad es mayor a 0.6
-        if prediction_proba[0][1] > 0.55:  # Ajusta el umbral según tus necesidades
-            result = "El estudiante tiene alto riesgo de deserción."
+        if prediction_proba[0][1] > 0.55: 
+            result = "⚠️ El estudiante tiene alto riesgo de deserción."
         else:
-            result = "El estudiante no tiene alto riesgo de deserción."
+            result = "✅ El estudiante no tiene alto riesgo de deserción."
         
         print("Probabilidad de deserción (clase 1):", prediction_proba[0][1])
         print("Resultado:", result)
         
-        # Redirigir a la página de resultado con el valor
         return redirect(url_for('resultadoP', resultado=result))
 
     return render_template('gestion.html')
 
 @app.route('/resultado')
 def resultado():
-    # Obtener el resultado de la URL
     resultado = request.args.get('resultado', 'No hay resultado disponible.')
     
     return render_template('resultado.html', resultado=resultado)
 
 @app.route('/resultadoP')
 def resultadoP():
-    # Obtener el resultado de la URL
     resultado = request.args.get('resultado', 'No hay resultado disponible.')
     
     return render_template('resultadoP.html', resultado=resultado)
 
-# Ruta para mostrar el formulario
+@app.route('/resultadoG')
+def resultadoG():
+    resultado = request.args.get('resultado', 'No hay resultado disponible.')
+    
+    return render_template('resultadoG.html', resultado=resultado)
+
 @app.route('/formulario_academicos.html')
 def formulario():
     return render_template('formulario_academicos.html')
@@ -192,6 +181,36 @@ def predecir():
 @app.route('/gestion.html')
 def gestion():
     return render_template('gestion.html')
+
+@app.route('/estadisticas')
+def estadisticas():
+    return render_template('estadisticas.html')
+
+@app.route('/estadisticas/<tipo>')
+def grafico(tipo):
+    grafico_genero, grafico_edad, grafico_promedio, grafico_beca, grafico_dinero= generar_estadisticas()
+    imagenes = {
+        'genero': grafico_genero,
+        'edad': grafico_edad,
+        'promedio': grafico_promedio,
+        'beca': grafico_beca,
+        'dinero': grafico_dinero
+    }
+    if tipo not in imagenes:
+        return "Gráfico no encontrado", 404
+    return f'''
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <title>Gráfico {tipo}</title>
+        </head>
+        <body>
+            <img src="data:image/png;base64,{imagenes[tipo]}" alt="Gráfico {tipo}">
+        </body>
+        </html>
+    '''
 
 
 @app.route('/prueba', methods=['GET'])

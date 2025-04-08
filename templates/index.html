@@ -21,7 +21,7 @@
                     <div class="collapse navbar-collapse" id="navbarColor02">
                         <ul class="navbar-nav me-auto">
                             <li class="nav-item">
-                                <a class="nav-link active" href="#">Home
+                                <a class="nav-link active" href="{{ url_for('index') }}">Home
                                     <span class="visually-hidden">(current)</span>
                                 </a>
                             </li>
@@ -74,6 +74,12 @@
                     <label for="promedio">Promedio:</label>
                     <input type="number" name="p15" step="0.1" min="0" max="10" required><br><br>
 
+                    <label for="p24_1">¿Falta dinero?</label>
+                    <select name="p24_1" required>
+                        <option value="1">Sí</option>
+                        <option value="2">No</option>
+                    </select><br><br>
+
                     <button type="submit">Predecir</button>
                 </form>
             </div>
@@ -93,7 +99,7 @@
                     <a class="nav-link dropdown-toggle show" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="true">Acciones</a>
                     <div class="dropdown-menu show" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, 44px);" data-popper-placement="bottom-start">
                         <a class="dropdown-item" href="{{ url_for('gestion') }}">Gestión de Estudiantes</a>
-                        <a class="dropdown-item" href="#">Predicciones y Análisis </a>
+                        <a class="dropdown-item" href="{{ url_for('estadisticas') }}">Estadísticas Generales</a>
                         <a class="dropdown-item" href="#">Reportes y Exportación</a>
                     </div>
                 </li>

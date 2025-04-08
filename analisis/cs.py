@@ -1,4 +1,4 @@
-import pandas as pd
+"""import pandas as pd
 
 # Ruta al archivo
 file_path = '/home/ISTHAR8/Downloads/PT/ENDEMS.csv'
@@ -32,3 +32,4 @@ condiciones_concluidos = (df['f21'] == 2)
 # Contar las filas que cumplen las condiciones
 contador_concluidos = df[condiciones_concluidos].shape[0]
 print(f"Número de filas en datos_concluidos: {contador_concluidos}")
+"""
