@@ -1,3 +1,4 @@
+
 .container {
     display: grid;
     grid-template-areas:
@@ -24,6 +25,9 @@
 
 .izq {
     grid-area: izq;
+    display: flex;
+    flex-direction: column;
+    gap: 150px;
   /*  border-style: solid;
     border-color: pink;*/
    
@@ -35,15 +39,21 @@
     border-color: pink;*/
     text-align: center;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    
 }
 
 .der {
     grid-area: der;
    /* border-style: solid;
     border-color: pink;*/
-    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 70px;
+    margin-top: 50px;
 }
 
 .footer {

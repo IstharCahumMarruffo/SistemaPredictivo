@@ -3,8 +3,8 @@
 
 /* Estilo del formulario */
 form {
-    background-color: #222222;  /* Fondo oscuro para el formulario */
-    color: #ffffff;  /* Texto blanco */
+    background-color: white;  /* Fondo oscuro para el formulario */
+    color: black;  /* Texto blanco */
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -14,7 +14,7 @@ form {
 
 /* Estilo de los encabezados */
 h2 {
-    color: #00aaff;  /* Color azul para los encabezados */
+    color: purple;  /* Color azul para los encabezados */
     margin-bottom: 10px;
 }
 
@@ -31,13 +31,13 @@ input, select {
     margin: 8px 0;
     border: 1px solid #333;
     border-radius: 4px;
-    background-color: #444444;  /* Fondo oscuro para los campos */
-    color: #ffffff;  /* Texto blanco */
+    background-color: white;  /* Fondo oscuro para los campos */
+    color: black;  /* Texto blanco */
 }
 
 /* Estilo para los botones */
 input[type="submit"] {
-    background-color: #00aaff;  /* Botón azul */
+    background-color: purple;  /* Botón azul */
     color: #ffffff;
     border: none;
     padding: 12px 20px;
@@ -48,5 +48,5 @@ input[type="submit"] {
 }
 
 input[type="submit"]:hover {
-    background-color: #0077cc;  /* Cambio de color en hover */
+    background-color: purple;  /* Cambio de color en hover */
 }

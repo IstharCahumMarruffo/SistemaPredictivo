@@ -3,55 +3,65 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Document</title>
+  <title>Sistema de Predicción de Deserción Escolar</title>
   <link rel="stylesheet" href="static/css/bootstrap.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="static/css/stylesEstadisticas.css" />
+  <link rel="stylesheet" href="static/css/styles.css" />
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
-        <div class="container-fluid">
-          <p>UAM Azcapotzalco</p>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarColor02">
-            <ul class="navbar-nav me-auto">
-              <li class="nav-item">
-                <a class="nav-link active" href="{{ url_for('index') }}">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">About</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Dropdown</a>
-                <div class="dropdown-menu">
-                  <a class="dropdown-item" href="#">Action</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Separated link</a>
-                </div>
-              </li>
-              <li>
-                <p style="font-family: 'Times New Roman', Times, serif; font-style: oblique; text-align: center; font-size: large;">Sistema de estimación de riesgo de abandono escolar en el nivel medio superior</p>
-              </li>
-              <li>
-                <div class="sesion">
-                  <img src="static/img/sesio.png" width="30px" height="30px" />
-                  <p>Usuario</p>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
+    
+       
+        
+        <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+            <div class="container-fluid">
+                <img style="height: 40px; width: 60;" src="/static/img/logoUAM.png">
+                <p style="font-family: 'Times New Roman', Times, serif; color:white; font-size: x-large;">UAM Azcapotzalco</p>
+              
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarColor01">
+
+
+                    <p style="font-family: 'Times New Roman', Times, serif; font-style: oblique; text-align: center; font-size:x-large; color:white">
+                        Sistema de estimación de riesgo de abandono escolar en el nivel medio superior
+                    </p>
+                </li>
+                </ul>
+
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                      <a class="nav-link active" href="{{ url_for('index') }}">
+                        <img style="width: 50px; height: 50px;" src="/static/img/home.png">
+                        <span class="visually-hidden">(current)</span>
+                      </a>
+                    </li>
+                
+              </div>
+            </div>
+          </nav>
+
+
+
     </div>
 
     <div class="izq">
-      
-    </div>
+            
+      <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle show" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="true">Menú</a>
+          <div class="dropdown-menu show" data-bs-popper="static">
+              <a class="dropdown-item" href="{{ url_for('gestion') }}">Gestión de Estudiantes</a>
+              <a class="dropdown-item" href="{{ url_for('estadisticas') }}">Estadísticas Generales</a>
+              <a class="dropdown-item" href="archivos.html" target="i2">Subir archivos</a>
+          </div>
+        </li>
+
+        <iframe name="i2" height="200px" width="200px"></iframe>
+  </div>
+
 
     <div class="centro">
       <iframe id="iG" name="iG" width="800px" height="800px"></iframe>
@@ -59,11 +69,11 @@
 
     <div class="der">
       <div class="botones">
-        <a href="{{ url_for('grafico', tipo='genero') }}" target="iG" class="btn btn-outline-success">Gráfico por género</a></li>
-        <a href="{{ url_for('grafico', tipo='edad') }}" target="iG" class="btn btn-outline-info">Gráfico por edad</a></li>
-        <a href="{{ url_for('grafico', tipo='promedio') }}" target="iG" class="btn btn-outline-warning">Gráfico por promedio</a></li>
+        <a href="{{ url_for('grafico', tipo='genero') }}" target="iG" type="button" class="btn btn-outline-primary">Gráfico por género</a></li>
+        <a href="{{ url_for('grafico', tipo='edad') }}" target="iG" type="button" class="btn btn-outline-success">Gráfico por edad</a></li>
+        <a href="{{ url_for('grafico', tipo='promedio') }}" target="iG" type="button" class="btn btn-outline-info">Gráfico por promedio</a></li>
         <a href="{{ url_for('grafico', tipo='beca') }}" target="iG" class="btn btn-outline-danger">Gráfico por beca</a></li>
-        <a href="{{ url_for('grafico', tipo='dinero') }}" target="iG" class="btn btn-outline-light">Gráfico por falta de dinero</a></li>
+        <a href="{{ url_for('grafico', tipo='dinero') }}" target="iG" type="button" class="btn btn-outline-dark">Gráfico por falta de dinero</a></li>
       </div>
     </div>
 

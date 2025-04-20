@@ -189,8 +189,8 @@ def cargar_datos_personales():
    # print (df_academicos)
     return df_academicos
 
-df=cargar_datos_academicos()
-print(df)
+#df=cargar_datos_academicos()
+#print(df)
 
 def cargar_datos_personales():
     db_config = {
@@ -356,6 +356,9 @@ def cargar_datos_generales ():
 #cargar_datos_generales()
 
 def cargar_datos_economicos():
+    import pymysql
+    import pandas as pd
+
     db_config = {
         "host": "localhost",
         "user": "root",
@@ -363,36 +366,50 @@ def cargar_datos_economicos():
         "database": "desercion_escolar"
     }
 
-    columnas_equivalentes ={
-        'p67':'p27', 'p68':'p29', 'p69':'p30',
-        'p70':'31', 'p63_6':'p24_6', 'p63_1':'p24_1'
+    columnas_equivalentes = {
+        'p67': 'p27',
+        'p68': 'p29',
+        'p69': 'p30',
+        'p70': 'p31',
+        'p63_6': 'p24_6',
+        'p63_1': 'p24_1'
     }
 
     try:
         conn = pymysql.connect(**db_config)
 
         queryD = """
-        SELECT f21,p27,p29,p30,p31,p24_6,p24_1
+        SELECT f21, p27, p29, p30, p31, p24_6, p24_1
         FROM datos_desertores;
         """
 
         queryC = """
-        SELECT f21,p67,p68,p69,p70,p63_6,p63_1 
+        SELECT f21, p67, p68, p69, p70, p63_6, p63_1 
         FROM datos_concluidos;
-
         """
 
         df_desertores = pd.read_sql(queryD, conn)
         df_concluidos = pd.read_sql(queryC, conn)
 
-        print("Datos cargados con éxito desde la base de datos")    
+        df_desertores["estado"] = "desertor"
+        df_concluidos["estado"] = "concluido"
+
+        print("Datos cargados con éxito desde la base de datos")
 
     except Exception as e:
-        print(f"Error al conectar a la base de datos")
+        print(f"Error al conectar a la base de datos: {e}")
         return None
-    
+
+    # Renombrar columnas de df_concluidos para que coincidan con las de df_desertores
     df_concluidos_renamed = df_concluidos.rename(columns=columnas_equivalentes)
+
+    # Evitar columnas duplicadas al unir
     df_concluidos_renamed = df_concluidos_renamed.loc[:, ~df_concluidos_renamed.columns.duplicated()]
+
+    # Restaurar la columna 'estado' después de renombrar
+    df_concluidos_renamed["estado"] = df_concluidos["estado"]
+
+    # Concatenar ambos dataframes
     df_economicos = pd.concat([df_desertores, df_concluidos_renamed], ignore_index=True)
 
     return df_economicos

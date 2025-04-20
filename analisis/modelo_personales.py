@@ -1,5 +1,5 @@
 from sklearn.model_selection import cross_val_score, train_test_split
-from sklearn.tree import DecisionTreeClassifier, export_graphviz
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report, accuracy_score, confusion_matrix, roc_curve, auc
 from imblearn.over_sampling import SMOTE
 import seaborn as sns
@@ -29,7 +29,8 @@ def entrenar_modelo_personal():
     df_personal = df_personal.dropna()
 
     df_personal["estado"] = df_personal["f21"].map({1: 1, 2: 0})
-    #print(df_personal['estado'].value_counts())
+    
+    print(df_personal['estado'].value_counts())
 
     X = df_personal[variables_personales]
     y = df_personal["estado"]
@@ -40,26 +41,33 @@ def entrenar_modelo_personal():
     modelo = DecisionTreeClassifier(random_state=42)
 
     scores = cross_val_score(modelo, X_res, y_res, cv=5, scoring='accuracy')
-    print("=== Resultados de la validación cruzada ===")
-    print(f"Precisión en cada pliegue: {scores}")
-    print(f"Precisión media: {scores.mean():.4f}")
-    print(f"Desviación estándar: {scores.std():.4f}")
+   # print("=== Resultados de la validación cruzada modelo personal ===")
+    #print(f"Precisión en cada pliegue: {scores}")
+    #print(f"Precisión media: {scores.mean():.4f}")
+    #print(f"Desviación estándar: {scores.std():.4f}")
 
     X_train, X_test, y_train, y_test = train_test_split(X_res, y_res, test_size=0.2, random_state=42)
     modelo.fit(X_train, y_train)
+   
+    y_pred = modelo.predict(X_test)
+   # print("\n=== Evaluación del modelo personal ===")
+    #print("Accuracy:", accuracy_score(y_test, y_pred))
+    #print("Reporte de clasificación:\n", classification_report(y_test, y_pred))
+    #print("Matriz de confusión:\n", confusion_matrix(y_test, y_pred))
+   
     """
     probas = modelo.predict_proba(X_test)[:, 1]
     fpr, tpr, thresholds = roc_curve(y_test, probas)
     youden_index = tpr - fpr
     optimal_idx = np.argmax(youden_index)
     optimal_threshold = thresholds[optimal_idx]
-    print(f"\n🔍 Umbral óptimo según índice de Youden: {optimal_threshold:.4f}")
+    print(f"\n Umbral óptimo según índice de Youden: {optimal_threshold:.4f}")
 
     y_pred_opt = (probas >= optimal_threshold).astype(int)
 
-    print("\n📊 Reporte con umbral óptimo:")
+    print("\n Reporte con umbral óptimo:")
     print(classification_report(y_test, y_pred_opt))
-    print("✅ Precisión del modelo (umbral óptimo):", accuracy_score(y_test, y_pred_opt))
+    print("Precisión del modelo (umbral óptimo):", accuracy_score(y_test, y_pred_opt))
 
     # Matriz de confusión
     cm = confusion_matrix(y_test, y_pred_opt)
@@ -84,4 +92,4 @@ def entrenar_modelo_personal():
     joblib.dump(modelo, 'modelo_personal.pkl')
     return modelo
 
-entrenar_modelo_personal()
+#entrenar_modelo_personal()

@@ -26,28 +26,28 @@ def entrenar_modelo_academico():
 
     df_academico = df[variables_academicas + ['f21', 'estado']].copy()
   
-
+   # print(df_academico["estado"].value_counts())
     X = df_academico[variables_academicas]
     y = df_academico["estado"]
 
     modelo = DecisionTreeClassifier(random_state=42)
     scores = cross_val_score(modelo, X, y, cv=5, scoring='accuracy')
-    print("=== Validación cruzada ===")
-    print(f"Precisión en cada pliegue: {scores}")
-    print(f"Precisión media: {scores.mean():.4f}")
-    print(f"Desviación estándar: {scores.std():.4f}")
+    #print("=== Validación cruzada modelo académico ===")
+    #print(f"Precisión en cada pliegue: {scores}")
+    #print(f"Precisión media: {scores.mean():.4f}")
+    #print(f"Desviación estándar: {scores.std():.4f}")
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     modelo.fit(X_train, y_train)
 
     y_pred = modelo.predict(X_test)
-    print("\n=== Evaluación del modelo ===")
-    print("Accuracy:", accuracy_score(y_test, y_pred))
-    print("Reporte de clasificación:\n", classification_report(y_test, y_pred))
-    print("Matriz de confusión:\n", confusion_matrix(y_test, y_pred))
+    #print("\n=== Evaluación del modelo academico ===")
+    #print("Accuracy:", accuracy_score(y_test, y_pred))
+    #print("Reporte de clasificación:\n", classification_report(y_test, y_pred))
+    #print("Matriz de confusión:\n", confusion_matrix(y_test, y_pred))
 
     joblib.dump(modelo, 'modelo_academico.pkl')
-    print("Modelo guardado en 'modelo_academico.pkl'")
+    #print("Modelo guardado en 'modelo_academico.pkl'")
 
     return modelo
 

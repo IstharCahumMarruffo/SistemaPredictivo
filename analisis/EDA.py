@@ -1,4 +1,4 @@
-import pandas as pd
+"""import pandas as pd
 import mysql.connector
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -55,3 +55,4 @@ print(concluyentes.isnull().sum())
 print("\nValores nulos en No Matriculados:")
 print(no_matriculados.isnull().sum())
 
+"""

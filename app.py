@@ -1,13 +1,14 @@
 from flask import Flask, render_template, request, jsonify
 import random
-from rendimiento import grafico
 from flask_sqlalchemy import SQLAlchemy
 from models import db, DatosConcluidos
-import pandas as pd  # Asegúrate de importar pandas para manejar DataFrame
+import pandas as pd 
 from analisis.modelo_academico import entrenar_modelo_academico
 from analisis.modelo_personales import entrenar_modelo_personal
 from analisis.modelo_general import entrenar_modelo_general
 from analisis.estadisticas_generales import generar_estadisticas
+from analisis.modelo_economico import entrenar_modelo_economico
+from modelos.evaluar_modelos import evaluar_modelos
 from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
@@ -132,7 +133,8 @@ def personal():
 
        
         prediction_proba = modeloP.predict_proba(input_data)
-
+        
+        
         if prediction_proba[0][1] > 0.55: 
             result = "⚠️ El estudiante tiene alto riesgo de deserción."
         else:
@@ -142,6 +144,61 @@ def personal():
         print("Resultado:", result)
         
         return redirect(url_for('resultadoP', resultado=result))
+
+    return render_template('gestion.html')
+
+modeloE = entrenar_modelo_economico()
+@app.route('/economico', methods=['GET', 'POST'])
+def economico():
+    if request.method == 'POST':
+        # Función para manejar la conversión y valores predeterminados
+        def safe_float(value, default=-1):
+            try:
+                return float(value) if value != '' else default
+            except ValueError:
+                return default
+
+        # Obtener los datos del formulario
+        data = {
+            'p27': request.form.get('p27'),
+            'p29': safe_float(request.form.get('p29')),
+            'p30': safe_float(request.form.get('p30')),
+            'p31': safe_float(request.form.get('p31')),
+            'p24_6': safe_float(request.form.get('p24_6')),
+            'p24_1': safe_float(request.form.get('p24_1')),
+        
+        }
+
+        # Si la respuesta en p27 es "No", asignar -1 a las otras preguntas
+        if data['p27'] == '2':
+            data['p29'] = -1
+            data['p30'] = -1
+            data['p31'] = -1
+
+        # Imprimir los datos para depuración
+        print("Datos recibidos:", data)
+
+        # Crear un DataFrame de pandas para usarlo con el modelo
+        input_data = pd.DataFrame([data])
+
+        # Predecir la probabilidad de deserción
+        prediction_proba = modeloE.predict_proba(input_data)
+        
+        # Mostrar el resultado de la predicción
+        if prediction_proba[0][1] > 0.7:
+         result = "⚠️ El estudiante tiene riesgo alto de deserción."
+
+        elif prediction_proba[0][1] > 0.5:
+            result = "⚠️ El estudiante tiene riesgo moderado de deserción."
+
+        else:
+            result = "✅ El estudiante no tiene alto riesgo de deserción."
+        
+        print("Probabilidad de deserción (clase 1):", prediction_proba[0][1])
+        print("Resultado:", result)
+
+        # Redirigir a la página de resultados
+        return redirect(url_for('resultadoE', resultado=result))
 
     return render_template('gestion.html')
 
@@ -157,6 +214,12 @@ def resultadoP():
     
     return render_template('resultadoP.html', resultado=resultado)
 
+@app.route('/resultadoE')
+def resultadoE():
+    resultado = request.args.get('resultado', 'No hay resultado disponible.')
+    
+    return render_template('resultadoE.html', resultado=resultado)
+
 @app.route('/resultadoG')
 def resultadoG():
     resultado = request.args.get('resultado', 'No hay resultado disponible.')
@@ -170,6 +233,14 @@ def formulario():
 @app.route('/formulario_personales.html')
 def formularioP():
     return render_template('formulario_personales.html')
+
+@app.route('/formulario_economicos.html')
+def formularioE():
+    return render_template('formulario_economicos.html')
+
+@app.route('/archivos.html')
+def archivosSu():
+    return render_template('archivos.html')
 
 @app.route('/predecir', methods=['POST'])
 def predecir():
@@ -218,6 +289,26 @@ def prueba():
     datos = DatosConcluidos.query.all()
     return jsonify([{"edo": d.edo, "muni": d.muni} for d in datos])
 
+
+#@app.route('/archivo')
+#def archivo():
+ #   return render_template('archivos.html')
+
+modelos = [modelo, modeloE, modeloP]
+
+
+@app.route('/cargar_archivo', methods=['POST'])
+def cargar_archivo():
+    archivo = request.files['archivo']
+    if not archivo:
+        return "No se subió ningún archivo", 400
+
+    df = pd.read_csv(archivo)
+
+    # Llamada a la función que obtiene los modelos y evalúa
+    resultados = evaluar_modelos(df)
+
+    return render_template('resultadoA.html', resultados=resultados)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,6 +1,5 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix, classification_report
@@ -32,11 +31,11 @@ def entrenar_modelo_general():
 
 
     cm = confusion_matrix(y_test, y_pred)
-    print("Matriz de Confusión:")
+    print("Matriz de Confusión modelo general:")
     print(cm)
 
     report = classification_report(y_test, y_pred)
-    print("Reporte de Clasificación:")
+    print("Reporte de Clasificación modelo general:")
     print(report)
     joblib.dump(modelo_g, 'modelo_general.pkl')
     return modelo_g
