@@ -6,30 +6,26 @@
     <title>Formulario de Desertores</title>
     <link rel="stylesheet" href="static/css/formulario.css">
     <script>
-        // Función para ocultar los campos p29, p30, p31 y p32 si p27 es "No"
         function validarP27(event) {
             var p27Value = document.querySelector('input[name="p27"]:checked');
             
             if (!p27Value) {
                 alert("Por favor, selecciona una opción en la pregunta p27.");
-                event.preventDefault(); // Impide el envío si no se selecciona una opción.
+                event.preventDefault(); 
                 return;
             }
             
             p27Value = p27Value.value;
             
             if (p27Value == 2) {
-                // Ocultar los campos relacionados
                 document.getElementById('p29').style.display = 'none';
                 document.getElementById('p30').style.display = 'none';
                 document.getElementById('p31').style.display = 'none';
                 
-                // Asignar -1 como valor en los campos ocultos
                 document.getElementById('p29').value = -1;
                 document.getElementById('p30').value = -1;
                 document.getElementById('p31').value = -1;
             } else {
-                // Mostrar los campos relacionados
                 document.getElementById('p29').style.display = 'block';
                 document.getElementById('p30').style.display = 'block';
                 document.getElementById('p31').style.display = 'block';
@@ -58,13 +54,11 @@
             </select>
             <br>
         </div>
-        <!-- Pregunta p27 -->
         <label>¿Trabajas o has trabajado durante tus estudios?</label>
         <input type="radio" name="p27" value="1" onchange="validarP27(event)"> Sí
         <input type="radio" name="p27" value="2" onchange="validarP27(event)"> No
         <br>
         
-        <!-- Campos que dependen de p27 -->
         <div id="p29" style="display:none;">
             <label>¿Durante cuánto tiempo trabajaste al tiempo que estudias?</label>
             <select name="p29">

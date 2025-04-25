@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario de Desertores</title>
     <link rel="stylesheet" href="static/css/formulario.css">
+    <script>
+        function toggleFields() {
+            var p12_1 = document.querySelector('select[name="p12_1"]').value;
+            var fields = ['p12_2', 'p12_3', 'p12_4', 'p12_5', 'p12_6', 'p12_7', 'p12_8', 'p12_9', 'p12_10'];
+
+            if (p12_1 == '1') {
+                fields.forEach(function(field) {
+                    document.querySelector('label[for="' + field + '"]').style.display = 'none';
+                    document.querySelector('select[name="' + field + '"]').style.display = 'none';
+                });
+            } else {
+                fields.forEach(function(field) {
+                    document.querySelector('label[for="' + field + '"]').style.display = 'block';
+                    document.querySelector('select[name="' + field + '"]').style.display = 'block';
+                });
+            }
+        }
+
+        window.onload = toggleFields;
+    </script>
 </head>
 <body>
     <form action="/personal" method="post">
@@ -17,60 +37,60 @@
         <br>
         <h3>Vives con...</h3>
         <label>Solo</label>
-        <select name="p12_1">
+        <select name="p12_1" onchange="toggleFields()">
             <option value="1">Sí</option>
             <option value="2">No</option>
         </select>
         <br>
-        <label>Madre</label>
+        <label for="p12_2">Madre</label>
         <select name="p12_2">
             <option value="1">Sí</option>
             <option value="2">No</option>
         </select>
         <br>
-        <label>Padre</label>
+        <label for="p12_3">Padre</label>
         <select name="p12_3">
             <option value="1">Sí</option>
             <option value="2">No</option>
         </select>
         <br>
-        <label>Padrastros</label>
+        <label for="p12_4">Padrastros</label>
         <select name="p12_4">
             <option value="1">Sí</option>
             <option value="2">No</option>
         </select>
         <br>
-        <label>Hermanos</label>
+        <label for="p12_5">Hermanos</label>
         <select name="p12_5">
             <option value="1">Sí</option>
             <option value="2">No</option>
         </select>
         <br>
-        <label>Otros familiares</label>
+        <label for="p12_6">Otros familiares</label>
         <select name="p12_6">
             <option value="1">Sí</option>
             <option value="2">No</option>
         </select>
         <br>
-        <label>Amigos</label>
+        <label for="p12_7">Amigos</label>
         <select name="p12_7">
             <option value="1">Sí</option>
             <option value="2">No</option>
         </select>
         <br>
-        <label>Hijos</label>
+        <label for="p12_8">Hijos</label>
         <select name="p12_8">
             <option value="1">Sí</option>
             <option value="2">No</option>
         </select>
         <br>
-        <label>Pareja</label>
+        <label for="p12_9">Pareja</label>
         <select name="p12_9">
             <option value="1">Sí</option>
             <option value="2">No</option>
         </select>
         <br>
-        <label>Otros</label>
+        <label for="p12_10">Otros</label>
         <select name="p12_10">
             <option value="1">Sí</option>
             <option value="2">No</option>

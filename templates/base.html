@@ -1,0 +1,83 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sistema de Predicción de Deserción Escolar{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/formulario.css') }}">
+</head>
+<body>
+    <div class="container">
+        
+        <!-- HEADER -->
+        <div class="header">
+            <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+                <div class="container-fluid">
+                    <img style="height: 40px; width: 60px;" src="{{ url_for('static', filename='img/logoUAM.png') }}">
+                    <p style="font-family: 'Times New Roman', Times, serif; color:white; font-size: x-large;">UAM Azcapotzalco</p>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarColor01">
+                        <p style="font-family: 'Times New Roman', Times, serif; font-style: oblique; text-align: center; font-size:x-large; color:white">
+                            Sistema de estimación de riesgo de abandono escolar en el nivel medio superior
+                        </p>
+                        <ul class="navbar-nav me-auto">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="{{ url_for('index') }}">
+                                    <img style="width: 50px; height: 50px;" src="{{ url_for('static', filename='img/home.png') }}">
+                                    <span class="visually-hidden">(current)</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <!-- IZQUIERDA -->
+        <div class="izq">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle show" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="true">Menú</a>
+                <div class="dropdown-menu show" data-bs-popper="static">
+                    <a class="dropdown-item" href="{{ url_for('gestion') }}">Gestión de Estudiantes</a>
+                    <a class="dropdown-item" href="{{ url_for('estadisticas') }}">Estadísticas Generales</a>
+                    <a class="dropdown-item" href="archivos.html" target="i2">Subir archivos</a>
+                </div>
+            </li>
+            <iframe name="i2" height="200px" width="200px"></iframe>
+        </div>
+
+        <!-- CONTENIDO CENTRAL -->
+        <div class="centro">
+            {% block content %}
+            {% endblock %}
+        </div>
+
+        <!-- DERECHA -->
+        <div class="der">
+            {% block derecha %}
+            {% endblock %}
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <div class="pag">
+                <ul class="pagination pagination-lg">
+                    <li class="page-item disabled"><a class="page-link" href="#">&laquo;</a></li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">4</a></li>
+                    <li class="page-item"><a class="page-link" href="#">5</a></li>
+                    <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

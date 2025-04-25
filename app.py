@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_file
 import random
+import traceback
 from flask_sqlalchemy import SQLAlchemy
+from io import BytesIO
 from models import db, DatosConcluidos
 import pandas as pd 
 from analisis.modelo_academico import entrenar_modelo_academico
@@ -10,6 +12,8 @@ from analisis.estadisticas_generales import generar_estadisticas
 from analisis.modelo_economico import entrenar_modelo_economico
 from modelos.evaluar_modelos import evaluar_modelos
 from flask import Flask, render_template, request, redirect, url_for
+from weasyprint import HTML
+import tempfile
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@localhost/desercion_escolar'
@@ -70,12 +74,15 @@ def academico():
        
         prediction_proba = modelo.predict_proba(input_data)
         probabilidad = prediction_proba[0][1]
-        if probabilidad >= 0.8:
-            result = f"⚠️ Riesgo muy alto de deserción )"
-        elif probabilidad >= 0.6:
-            result = f"⚠️ Riesgo moderado de deserción )"
+        
+        porcentaje = probabilidad * 100
+        
+        if probabilidad > 0.7:
+            result = f"⚠️ ⚠️ Riesgo muy alto de deserción⚠️ ⚠️\n {porcentaje:.2f}%"
+        elif probabilidad > 0.5:
+            result = f"⚠️ Riesgo moderado de deserción ⚠️\n{porcentaje:.2f}%"
         else:
-            result = f"✅ Riesgo bajo de deserción )"
+            result = f"✅ Riesgo bajo de deserción✅\n {porcentaje:.2f}%"   
 
         
         print("Probabilidad de deserción (clase 1):", prediction_proba[0][1])
@@ -133,17 +140,20 @@ def personal():
 
        
         prediction_proba = modeloP.predict_proba(input_data)
-        
-        
-        if prediction_proba[0][1] > 0.55: 
-            result = "⚠️ El estudiante tiene alto riesgo de deserción."
+        probabilidad = prediction_proba[0][1]
+        porcentaje = probabilidad * 100
+       
+        if probabilidad > 0.7:
+            result = f"⚠️ ⚠️ Riesgo P muy alto de deserción⚠️ ⚠️\n {porcentaje:.2f}%"
+        elif probabilidad > 0.5:
+            result = f"⚠️ Riesgo P moderado de deserción ⚠️\n{porcentaje:.2f}%"
         else:
-            result = "✅ El estudiante no tiene alto riesgo de deserción."
+            result = f"✅ Riesgo P bajo de deserción✅\n {porcentaje:.2f}%"  
         
         print("Probabilidad de deserción (clase 1):", prediction_proba[0][1])
         print("Resultado:", result)
         
-        return redirect(url_for('resultadoP', resultado=result))
+        return redirect(url_for('resultado', resultado=result))
 
     return render_template('gestion.html')
 
@@ -184,21 +194,22 @@ def economico():
         # Predecir la probabilidad de deserción
         prediction_proba = modeloE.predict_proba(input_data)
         
-        # Mostrar el resultado de la predicción
-        if prediction_proba[0][1] > 0.7:
-         result = "⚠️ El estudiante tiene riesgo alto de deserción."
-
-        elif prediction_proba[0][1] > 0.5:
-            result = "⚠️ El estudiante tiene riesgo moderado de deserción."
-
+        probabilidad = prediction_proba[0][1]
+        
+        porcentaje = probabilidad * 100
+        
+        if probabilidad > 0.7:
+            result = f"⚠️ ⚠️ Riesgo E muy alto de deserción⚠️ ⚠️\n {porcentaje:.2f}%"
+        elif probabilidad > 0.5:
+            result = f"⚠️ Riesgo E moderado de deserción ⚠️\n{porcentaje:.2f}%"
         else:
-            result = "✅ El estudiante no tiene alto riesgo de deserción."
+            result = f"✅ Riesgo E bajo de deserción✅\n {porcentaje:.2f}%"  
+        
         
         print("Probabilidad de deserción (clase 1):", prediction_proba[0][1])
         print("Resultado:", result)
 
-        # Redirigir a la página de resultados
-        return redirect(url_for('resultadoE', resultado=result))
+        return redirect(url_for('resultado', resultado=result))
 
     return render_template('gestion.html')
 
@@ -208,17 +219,6 @@ def resultado():
     
     return render_template('resultado.html', resultado=resultado)
 
-@app.route('/resultadoP')
-def resultadoP():
-    resultado = request.args.get('resultado', 'No hay resultado disponible.')
-    
-    return render_template('resultadoP.html', resultado=resultado)
-
-@app.route('/resultadoE')
-def resultadoE():
-    resultado = request.args.get('resultado', 'No hay resultado disponible.')
-    
-    return render_template('resultadoE.html', resultado=resultado)
 
 @app.route('/resultadoG')
 def resultadoG():
@@ -242,11 +242,10 @@ def formularioE():
 def archivosSu():
     return render_template('archivos.html')
 
-@app.route('/predecir', methods=['POST'])
-def predecir():
-    datos = request.form
-    riesgo = random.uniform(0, 1)  
-    return jsonify({'riesgo': round(riesgo * 100, 2)})
+
+@app.route('/i1')
+def i1():
+    return render_template('i1.html')
 
 
 @app.route('/gestion.html')
@@ -284,17 +283,6 @@ def grafico(tipo):
     '''
 
 
-@app.route('/prueba', methods=['GET'])
-def prueba():
-    datos = DatosConcluidos.query.all()
-    return jsonify([{"edo": d.edo, "muni": d.muni} for d in datos])
-
-
-#@app.route('/archivo')
-#def archivo():
- #   return render_template('archivos.html')
-
-modelos = [modelo, modeloE, modeloP]
 
 
 @app.route('/cargar_archivo', methods=['POST'])
@@ -304,11 +292,34 @@ def cargar_archivo():
         return "No se subió ningún archivo", 400
 
     df = pd.read_csv(archivo)
-
-    # Llamada a la función que obtiene los modelos y evalúa
     resultados = evaluar_modelos(df)
 
     return render_template('resultadoA.html', resultados=resultados)
+
+@app.route('/descargar_pdf', methods=['POST'])
+def descargar_pdf():
+    try:
+        resultados = request.get_json().get('resultados')
+        if not resultados:
+            return "No se proporcionaron resultados", 400
+
+        html_str = render_template('pdf.html', resultados=resultados)
+        print(html_str)
+
+        pdf_file = BytesIO()
+        HTML(string=html_str).write_pdf(pdf_file)
+        pdf_file.seek(0)
+
+        return send_file(
+            pdf_file, 
+            as_attachment=True, 
+            download_name='predicciones.pdf', 
+            mimetype='application/pdf'
+        )
+    except Exception as e:
+        traceback.print_exc()
+        return f"Ocurrió un error al generar el PDF: {e}", 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)

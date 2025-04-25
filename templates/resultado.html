@@ -11,7 +11,7 @@
             padding: 20px;
         }
         h2{
-            color:white;
+            color:black;
         }
         .container {
             max-width: 500px;
@@ -24,7 +24,7 @@
         .result {
             font-size: 20px;
             font-weight: bold;
-            color: wheat;
+            color: black;
         }
         .btn {
             display: inline-block;
@@ -32,20 +32,21 @@
             padding: 10px 20px;
             font-size: 16px;
             color: white;
-            background-color: #007bff;
+            background-color: #6f0096;
             text-decoration: none;
             border-radius: 5px;
         }
         .btn:hover {
-            background-color: #0056b3;
+            background-color: violet;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
         <h2>Resultado de la Predicción</h2>
         <p class="result">{{ resultado }}</p>
-        <a href="{{ url_for('gestion') }}"  target="_parent" class="btn">Ok</a>
+        <a href="{{ url_for('gestion') }}"   target="_parent" class="btn">Ok</a>
     </div>
 </body>
 </html>

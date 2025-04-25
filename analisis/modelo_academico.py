@@ -1,7 +1,17 @@
 from sklearn.model_selection import cross_val_score, train_test_split
-from sklearn.tree import DecisionTreeClassifier, plot_tree
-from sklearn.metrics import classification_report, accuracy_score, confusion_matrix, roc_curve, auc
+from sklearn.tree import plot_tree
+from sklearn.ensemble import RandomForestClassifier
+#from sklearn.metrics import (
+#   classification_report,
+#    accuracy_score,
+#    confusion_matrix,
+#    roc_auc_score,
+#    roc_curve,
+#    auc
+#)
 from imblearn.over_sampling import SMOTE
+from imblearn.pipeline import Pipeline
+import seaborn as sns
 import pandas as pd
 import sys
 import os
@@ -10,6 +20,7 @@ import joblib
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from limpieza import cargar_datos_academicos
+
 
 def entrenar_modelo_academico():
     df = cargar_datos_academicos()
@@ -24,84 +35,81 @@ def entrenar_modelo_academico():
         'p13_3', 'p24_7', 'p24_8'
     ]
 
-    df_academico = df[variables_academicas + ['f21', 'estado']].copy()
-  
-   # print(df_academico["estado"].value_counts())
+    df_academico = df[variables_academicas + ['f21']].copy()
+    df_academico = df_academico.dropna(subset=variables_academicas+['f21'])
+    df_academico["estado"] = df_academico["f21"].map({1: 1, 2:0})
+
     X = df_academico[variables_academicas]
     y = df_academico["estado"]
 
-    modelo = DecisionTreeClassifier(random_state=42)
-    scores = cross_val_score(modelo, X, y, cv=5, scoring='accuracy')
-    #print("=== Validación cruzada modelo académico ===")
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    pipeline = Pipeline([
+        ('smote', SMOTE(random_state=42)),
+        ('rf', RandomForestClassifier(random_state=42, n_jobs=-1))
+    ])
+
+    scores = cross_val_score(pipeline, X, y, cv=5, scoring='accuracy')
+    
+    #print("\n\n=== Validación cruzada Random Forest ===")
     #print(f"Precisión en cada pliegue: {scores}")
     #print(f"Precisión media: {scores.mean():.4f}")
     #print(f"Desviación estándar: {scores.std():.4f}")
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    modelo.fit(X_train, y_train)
+    pipeline.fit(X_train, y_train)
 
-    y_pred = modelo.predict(X_test)
-    #print("\n=== Evaluación del modelo academico ===")
+
+    y_pred = pipeline.predict(X_test)
+
+    #print("\n=== Evaluación del modelo Random Forest ===")
     #print("Accuracy:", accuracy_score(y_test, y_pred))
     #print("Reporte de clasificación:\n", classification_report(y_test, y_pred))
     #print("Matriz de confusión:\n", confusion_matrix(y_test, y_pred))
 
-    joblib.dump(modelo, 'modelo_academico.pkl')
-    #print("Modelo guardado en 'modelo_academico.pkl'")
+    y_prob = pipeline.predict_proba(X_test)[:, 1]
+    #print("ROC AUC:", roc_auc_score(y_test, y_prob))
 
-    return modelo
+    # Guardar el modelo entrenado
+    joblib.dump(pipeline, 'modelo_random_forest.pkl')
+    #print("Modelo guardado en 'modelo_random_forest.pkl'")
 
-"""
-    plt.figure(figsize=(6, 6))
+    """
     cm = confusion_matrix(y_test, y_pred)
-    plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
-    plt.title('Matriz de Confusión Académicos')
-    plt.colorbar()
-    ticks = range(len(set(y)))
-    plt.xticks(ticks, set(y), rotation=45)
-    plt.yticks(ticks, set(y))
-    plt.ylabel('Etiqueta Verdadera')
-    plt.xlabel('Etiqueta Predicha')
-
-    thresh = cm.max() / 2.
-    for i in range(cm.shape[0]):
-        for j in range(cm.shape[1]):
-            plt.text(j, i, format(cm[i, j], 'd'),
-                     ha="center", va="center",
-                     color="white" if cm[i, j] > thresh else "black")
-
+    plt.figure(figsize=(6, 5))
+    sns.heatmap(cm, annot=True, fmt="d", cmap="RdPu")
+    plt.title("Matriz de Confusión Modelo Académico")
+    plt.xlabel("Predicción")
+    plt.ylabel("Real")
     plt.show()
 
-   
-    fpr, tpr, thresholds = roc_curve(y_test, modelo.predict_proba(X_test)[:,1], pos_label='desertor')
+    # === Curva ROC ===
+    fpr, tpr, thresholds = roc_curve(y_test, y_prob)
     roc_auc = auc(fpr, tpr)
-    plt.figure(figsize=(6, 6))
-    plt.plot(fpr, tpr, color='blue', lw=2, label=f'Curva ROC (área = {roc_auc:.2f})')
-    plt.plot([0, 1], [0, 1], color='gray', lw=2, linestyle='--')
-    plt.xlabel('Tasa de Falsos Positivos')
-    plt.ylabel('Tasa de Verdaderos Positivos')
-    plt.title('Curva ROC Académicos')
-    plt.legend(loc='lower right')
+
+    plt.figure(figsize=(6, 5))
+    plt.plot(fpr, tpr, label=f"AUC = {roc_auc:.2f}")
+    plt.plot([0, 1], [0, 1], 'k--')  # Línea diagonal
+    plt.title("Curva ROC Modelo Académico")
+    plt.xlabel("Tasa de Falsos Positivos")
+    plt.ylabel("Tasa de Verdaderos Positivos")
+    plt.legend(loc="lower right")
     plt.show()
 
-    youden_index = tpr - fpr
-    optimal_threshold_index = youden_index.argmax()  
-    optimal_threshold = thresholds[optimal_threshold_index]  
-
-    print(f"Umbral óptimo: {optimal_threshold:.2f}")
-
-   
-    prediccion_optima = (modelo.predict_proba(X_test)[:,1] >= optimal_threshold).astype(int)
-    print("Predicciones con umbral óptimo:")
-    print(prediccion_optima)
-
-    plt.figure(figsize=(15, 10))
-    plot_tree(modelo, filled=True, feature_names=variables_academicas, class_names=[str(i) for i in set(y)], rounded=True)
-    plt.title('Árbol de Decisión Académicos')
+    # === Visualización de un árbol individual del Random Forest (opcional) ===
+    rf_model = pipeline.named_steps['rf']
+    plt.figure(figsize=(20, 10))
+    plot_tree(rf_model.estimators_[0], 
+              feature_names=variables_academicas, 
+              class_names=["Desertor", "No Desertor"], 
+              filled=True, 
+              rounded=True)
+    plt.title("Árbol de Decisión Individual del Random Forest Modelo Académico")
     plt.show()"""
 
+    return pipeline
 
-#entrenar_modelo_academico()
+   
+
 """
 modelo = joblib.load('modelo_academico.pkl')
 
@@ -126,8 +134,29 @@ nuevo_estudiante = pd.DataFrame([{
     'p24_8': 1
 }])
 
-prediccion = modelo.predict(nuevo_estudiante)[0]
-proba = modelo.predict_proba(nuevo_estudiante)[0]
+nuevo_estudiante2 = pd.DataFrame([{
+    'p2a': 2024,
+    'p4': 80,
+    'p5': 8,
+    'p6': 2,
+    'p7': 4,
+    'p10h': 0,
+    'p10m': 20,
+    'p11_1': 1,
+    'p14': 2,
+    'p15': 8,
+    'p16': 1,
+    'p17': 2,
+    'p18': 2,
+    'p13_1': 1,
+    'p13_2': 1,
+    'p13_3': 2, 
+    'p24_7': 2,
+    'p24_8': 2
+}])
+
+prediccion = modelo.predict(nuevo_estudiante2)[0]
+proba = modelo.predict_proba(nuevo_estudiante2)[0]
 
 print(f"Predicción: {prediccion}")
 print(f"Probabilidad de cada clase: {proba}")

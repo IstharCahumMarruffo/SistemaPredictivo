@@ -44,8 +44,10 @@ def cargar_datos_academicos():
 
         df_desertores = pd.read_sql(queryD, conn)
         df_concluidos = pd.read_sql(queryC, conn)
-        conn.close()
-        print(" Datos cargados con éxito desde la base de datos.")
+       
+        df_desertores["estado"] = "desertor"
+        df_concluidos["estado"] = "concluido"
+       # print(" Datos cargados con éxito desde la base de datos.")
 
     except Exception as e:
         print(f" Error al conectar a la base de datos: {e}")
@@ -60,18 +62,12 @@ def cargar_datos_academicos():
     df_concluidos_renamed = df_concluidos.rename(columns=columnas_equivalentes)
     df_concluidos_renamed = df_concluidos_renamed.loc[:, ~df_concluidos_renamed.columns.duplicated()]
 
-
+    df_concluidos_renamed["estado"] = df_concluidos["estado"]
     #print("\n Concluidos (después del rename):")
     #print(df_concluidos_renamed.head())
 
-    columnas_comunes = df_desertores.columns.intersection(df_concluidos_renamed.columns)
+   
     #print("\n📌 Columnas comunes entre desertores y concluidos:", list(columnas_comunes))
-
-    df_desertores = df_desertores[columnas_comunes].copy()
-    df_concluidos_renamed = df_concluidos_renamed[columnas_comunes].copy()
-
-    df_desertores["estado"] = "desertor"
-    df_concluidos_renamed["estado"] = "concluido"
 
     df_academicos = pd.concat([df_desertores, df_concluidos_renamed], ignore_index=True)
 
@@ -92,7 +88,7 @@ def cargar_datos_academicos():
      #   valores_unicos = df_filtrado[columna].unique()
       #  print(f"{columna} ({len(valores_unicos)} valores únicos): {valores_unicos}")
 
-
+    conn.close()
     return df_academicos
 
 def cargar_datos_personales():
@@ -137,8 +133,10 @@ def cargar_datos_personales():
 
         df_desertores = pd.read_sql(queryD, conn)
         df_concluidos = pd.read_sql(queryC, conn)
-        conn.close()
-        print("Datos cargados con éxito desde la base de datos.")
+
+        df_desertores["estado"] = "desertor"
+        df_concluidos["estado"] = "concluido"
+        #print("Datos cargados con éxito desde la base de datos.")
 
     except Exception as e:
         print(f"Error al conectar a la base de datos: {e}")
@@ -157,15 +155,9 @@ def cargar_datos_personales():
 #    print("\n Concluidos (después del rename):")
  #   print(df_concluidos_renamed.head())
 
-    columnas_comunes = df_desertores.columns.intersection(df_concluidos_renamed.columns)
     #print("\n Columnas comunes entre desertores y concluidos:", list(columnas_comunes))
 
-    df_desertores = df_desertores[columnas_comunes].copy()
-    df_concluidos_renamed = df_concluidos_renamed[columnas_comunes].copy()
-
-    df_desertores["estado"] = "desertor"
-    df_concluidos_renamed["estado"] = "concluido"
-
+    
     df_academicos = pd.concat([df_desertores, df_concluidos_renamed], ignore_index=True)
 
     #print("\n Datos combinados correctamente. Vista previa final:")
@@ -187,6 +179,7 @@ def cargar_datos_personales():
      #   print(f"{columna} ({len(valores_unicos)} valores únicos): {valores_unicos}")
 
    # print (df_academicos)
+    conn.close()
     return df_academicos
 
 #df=cargar_datos_academicos()
@@ -228,8 +221,11 @@ def cargar_datos_personales():
 
         df_desertores = pd.read_sql(queryD, conn)
         df_concluidos = pd.read_sql(queryC, conn)
-        conn.close()
-        print("Datos cargados con éxito desde la base de datos.")
+        df_desertores["estado"] = "desertor"
+        df_concluidos["estado"] = "concluido"
+
+        
+        #print("Datos cargados con éxito desde la base de datos.")
 
     except Exception as e:
         print(f"Error al conectar a la base de datos: {e}")
@@ -250,14 +246,7 @@ def cargar_datos_personales():
     #print("\n Concluidos (después del rename):")
     #print(df_concluidos_renamed.head())
 
-    columnas_comunes = df_desertores.columns.intersection(df_concluidos_renamed.columns)
-    #print("\n Columnas comunes entre desertores y concluidos:", list(columnas_comunes))
 
-    df_desertores = df_desertores[columnas_comunes].copy()
-    df_concluidos_renamed = df_concluidos_renamed[columnas_comunes].copy()
-
-    df_desertores["estado"] = "desertor"
-    df_concluidos_renamed["estado"] = "concluido"
 
     df_personales = pd.concat([df_desertores, df_concluidos_renamed], ignore_index=True)
 
@@ -278,7 +267,7 @@ def cargar_datos_personales():
     #    valores_unicos = df_filtrado[columna].unique()
         #print(f" {columna} ({len(valores_unicos)} valores únicos): {valores_unicos}")
 
-
+    conn.close()
     return df_personales
 
 #cargar_datos_personales()
@@ -356,8 +345,6 @@ def cargar_datos_generales ():
 #cargar_datos_generales()
 
 def cargar_datos_economicos():
-    import pymysql
-    import pandas as pd
 
     db_config = {
         "host": "localhost",
@@ -394,7 +381,7 @@ def cargar_datos_economicos():
         df_desertores["estado"] = "desertor"
         df_concluidos["estado"] = "concluido"
 
-        print("Datos cargados con éxito desde la base de datos")
+        #print("Datos cargados con éxito desde la base de datos")
 
     except Exception as e:
         print(f"Error al conectar a la base de datos: {e}")
@@ -412,4 +399,5 @@ def cargar_datos_economicos():
     # Concatenar ambos dataframes
     df_economicos = pd.concat([df_desertores, df_concluidos_renamed], ignore_index=True)
 
+    conn.close()
     return df_economicos

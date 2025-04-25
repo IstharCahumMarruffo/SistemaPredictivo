@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultados PDF</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #999;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        h2 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h2>Resultados de la Predicción</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Estudiante</th>
+                <th>Académicos</th>
+                <th>Personales</th>
+                <th>Económicos</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for resultado in resultados %}
+                <tr>
+                    <td>{{ resultado.estudiante }}</td>
+                    {% for prediccion in resultado.predicciones %}
+                        <td>{{ prediccion }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

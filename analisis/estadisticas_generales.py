@@ -7,12 +7,11 @@ import base64
 import sys
 import os
 
-# Ajuste de estilo moderno
 plt.style.use('default')
 plt.rcParams.update({
     'font.size': 13,
     'font.family': 'sans-serif',
-    'font.sans-serif': ['DejaVu Sans', 'Arial'],  # Usamos DejaVu Sans como opción de respaldo
+    'font.sans-serif': ['DejaVu Sans', 'Arial'],
     'axes.titlesize': 16,
     'axes.titleweight': 'semibold',
     'axes.labelsize': 13,
@@ -35,13 +34,12 @@ plt.rcParams.update({
     'savefig.edgecolor': '#ffffff'
 })
 
-# Paleta de colores modernos opcional
-colores_modernos = {
-    'genero': '#6A0DAD',  # Morado
-    'edad': '#228B22',    # Verde
-    'promedio': '#0000FF', # Azul
-    'beca': '#FF0000',     # Rojo
-    'dinero': '#000000'    # Negro
+colores = {
+    'genero': '#6A0DAD',  
+    'edad': '#228B22',    
+    'promedio': '#0000FF',
+    'beca': '#FF0000',     
+    'dinero': '#000000'   
 }
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -50,7 +48,7 @@ from limpieza import cargar_datos_generales
 def generar_estadisticas():
     df = cargar_datos_generales()
 
-    df['f21'] = df['f21'].map({1: 1, 2: 0})  # 1: desertó, 0: concluyó
+    df['f21'] = df['f21'].map({1: 1, 2: 0}) 
     df['s1'] = df['s1'].map({1: 'Hombre', 2: 'Mujer'})
     df['p18'] = df['p18'].map({1: 'Si', 2: 'No'})
     df['p24_1'] = df['p24_1'].map({1: 'Si', 2: 'No'})
@@ -86,11 +84,11 @@ def generar_estadisticas():
 
         return base64.b64encode(image_png).decode('utf-8')
 
-    grafico_genero = plot_to_base64(riesgo_genero, 'Por Género', colores_modernos['genero'], 'Género')
-    grafico_edad = plot_to_base64(riesgo_edad, 'Por Edad', colores_modernos['edad'], 'Edad')
-    grafico_promedio = plot_to_base64(riesgo_promedio, 'Por Promedio', colores_modernos['promedio'], 'Promedio')
-    grafico_beca = plot_to_base64(riesgo_beca, '¿Tiene beca?', colores_modernos['beca'], '')
-    grafico_dinero = plot_to_base64(riesgo_dinero, '¿Falta dinero?', colores_modernos['dinero'], '')
+    grafico_genero = plot_to_base64(riesgo_genero, 'Por Género', colores['genero'], 'Género')
+    grafico_edad = plot_to_base64(riesgo_edad, 'Por Edad', colores['edad'], 'Edad')
+    grafico_promedio = plot_to_base64(riesgo_promedio, 'Por Promedio', colores['promedio'], 'Promedio')
+    grafico_beca = plot_to_base64(riesgo_beca, '¿Tiene beca?', colores['beca'], '')
+    grafico_dinero = plot_to_base64(riesgo_dinero, '¿Falta dinero?', colores['dinero'], '')
 
     resumen = df.groupby(['s1', 'Rango_Edad', 'Rango_Promedio'])['f21'].mean().reset_index()
     resumen.rename(columns={'s1': 'Sexo', 'f21': 'Deserto'}, inplace=True)

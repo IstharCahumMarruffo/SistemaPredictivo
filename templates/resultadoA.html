@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Resultados de Predicción</title>
-   
     <link rel="stylesheet" href="static/css/bootstrap.min.css">
 </head>
 <body>
@@ -13,7 +12,7 @@
             <tr class="table-primary">
                 <th scope="row">Estudiante</th>
                 <th scope="row">Basado en datos académicos</th>
-                <th scope="row">Basaado en datos personales</th>
+                <th scope="row">Basado en datos personales</th>
                 <th scope="row">Basado en datos económicos</th>
             </tr>
         </thead>
@@ -28,5 +27,40 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- Almacenamos los resultados en un atributo data-resultados -->
+    <div id="datos-resultados" data-resultados='{{ resultados | tojson | safe }}'></div>
+
+    <button onclick="descargarPDF()">Descargar como PDF</button>
+
+    <script>
+        function descargarPDF() {
+            // Obtener el JSON almacenado en el atributo data-resultados
+            const raw = document.getElementById("datos-resultados").dataset.resultados;
+            const datosResultados = JSON.parse(raw);
+
+            // Realizar la solicitud POST para descargar el PDF
+            fetch("/descargar_pdf", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ resultados: datosResultados })
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "predicciones.pdf";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            })
+            .catch(error => {
+                console.error("Error al descargar PDF:", error);
+            });
+        }
+    </script>
 </body>
 </html>

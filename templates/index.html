@@ -1,145 +1,32 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Predicción de Deserción Escolar</title>
-    <link rel="stylesheet" href="static/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="static/css/styles.css">
-    <link rel="stylesheet" href="static/css/formulario.css">
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-        
-           
-            
-            <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
-                <div class="container-fluid">
-                    <img style="height: 40px; width: 60;" src="/static/img/logoUAM.png">
-                    <p style="font-family: 'Times New Roman', Times, serif; color:white; font-size: x-large;">UAM Azcapotzalco</p>
-                  
-                  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                  </button>
-                  <div class="collapse navbar-collapse" id="navbarColor01">
-    
+{% extends "base.html" %}
 
-                        <p style="font-family: 'Times New Roman', Times, serif; font-style: oblique; text-align: center; font-size:x-large; color:white">
-                            Sistema de estimación de riesgo de abandono escolar en el nivel medio superior
-                        </p>
-                    </li>
-                    </ul>
+{% block title %}Inicio - Sistema de Predicción de Deserción Escolar{% endblock %}
 
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                          <a class="nav-link active" href="{{ url_for('index') }}">
-                            <img style="width: 50px; height: 50px;" src="/static/img/home.png">
-                            <span class="visually-hidden">(current)</span>
-                          </a>
-                        </li>
-                    
-                  </div>
-                </div>
-              </nav>
+{% block content %}
+    <h2>🎓 Sistema de Predicción de Deserción Escolar</h2> 
+    <h3>¿Sabías qué?</h3> 
+    <p>
+        En México, el abandono escolar en el nivel medio superior es un problema muy serio, esto afecta la continuidad de los estudios y con ello se reduce la posibilidad para los jóvenes de acceder a buenas oportunidades laborales.
+        Este nivel educativo, que es un puente hacia los estudios universitarios, registra las tasas de deserción más altas respecto a otros, con un índice nacional del 8.7 %.
+    </p> 
+    <p>
+        Los factores detrás de esto son diversos, e incluyen condiciones económicas, falta de apoyo familiar, además de factores sociales y educativos. El tener tantos factores hace muy complicado el poder decir el riesgo que corre un estudiante de abandonar sus estudios.
+    </p>
 
+    <h3>¿Qué hacemos?</h3>
+    <p>
+        Este es un sistema que, utilizando minería de datos educacional, permite identificar el nivel de riesgo que tiene un estudiante de abandonar sus estudios en el nivel medio superior, con base en sus características económicas, laborales y familiares, mediante técnicas predictivas.
+    </p>
 
+    {% if resultado %}
+        <h2>Resultado: {{ resultado }}</h2>
+    {% endif %}
+{% endblock %}
 
-        </div>
-
-        <div class="izq">
-            
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle show" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="true">Menú</a>
-                <div class="dropdown-menu show" data-bs-popper="static">
-                    <a class="dropdown-item" href="{{ url_for('gestion') }}">Gestión de Estudiantes</a>
-                    <a class="dropdown-item" href="{{ url_for('estadisticas') }}">Estadísticas Generales</a>
-                    <a class="dropdown-item" href="archivos.html" target="i2">Subir archivos</a>
-                </div>
-              </li>
-
-              <iframe name="i2" height="200px" width="200px"></iframe>
-        </div>
-
-        <div class="centro">
-        
-          <h2> 🎓 Bienvenido al Sistema de Predicción de Deserción Escolar</h2> 
-           <h3>Nuestra misión:</h3> 
-           <p>Anticipar y prevenir el abandono escolar mediante el análisis de datos.</p> 
-           
-
-            <h3>¿Qué hacemos?</h3>
-            <p>Este sistema utiliza técnicas de análisis predictivo para identificar a estudiantes en riesgo de abandonar sus estudios. A través del procesamiento de datos académicos, socioeconómicos y de comportamiento, generamos alertas tempranas que permiten tomar decisiones informadas.
-            </p>
-            
-
-            {% if resultado %}
-                <h2>Resultado: {{ resultado }}</h2>
-            {% endif %}
-        </div>
-
-        <div class="der">
-            <!--
-            <div class="filtros">
-                <form method="POST">
-                    <label for="f8e_1">Edad:</label>
-                    <select name="f8e_1" required>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                    </select><br><br>
-
-                    <label for="s1">Género:</label>
-                    <select name="s1" required>
-                        <option value="1">Hombre</option>
-                        <option value="2">Mujer</option>
-                    </select><br><br>
-
-                    <label for="promedio">Promedio:</label>
-                    <input type="number" name="p15" step="0.1" min="0" max="10" required><br><br>
-
-                    <label for="p24_1">¿Falta dinero?</label>
-                    <select name="p24_1" required>
-                        <option value="1">Sí</option>
-                        <option value="2">No</option>
-                    </select><br><br>
-
-                    <button type="submit">Predecir</button>
-                </form>
-            </div>
-            -->
-            
-        </div>
-
-        <div class="footer">
-            <div class="pag">
-                <ul class="pagination pagination-lg">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#">&laquo;</a>
-                    </li>
-                    <li class="page-item active">
-                        <a class="page-link" href="#">1</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">2</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">3</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">4</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">5</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">&raquo;</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+{% block derecha %}
+    <div class="im">
+        <img width="200px" height="100px" src="{{ url_for('static', filename='img/Estu.jpg') }}">
+        <img width="200px" height="100px" src="{{ url_for('static', filename='img/birr.jpg') }}">
+        <img width="200px" height="100px" src="{{ url_for('static', filename='img/des.png') }}">
     </div>
-</body>
-</html>
+{% endblock %}
