@@ -35,10 +35,10 @@ plt.rcParams.update({
 })
 
 colores = {
-    'genero': '#6A0DAD',  
-    'edad': '#228B22',    
-    'promedio': '#0000FF',
-    'beca': '#FF0000',     
+    'genero': '#f34550',  
+    'edad': '#00d557',    
+    'promedio': '#47449b',
+    'beca': '#f97a00',     
     'dinero': '#000000'   
 }
 

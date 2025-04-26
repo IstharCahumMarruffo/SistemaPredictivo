@@ -7,7 +7,7 @@ from models import db, DatosConcluidos
 import pandas as pd 
 from analisis.modelo_academico import entrenar_modelo_academico
 from analisis.modelo_personales import entrenar_modelo_personal
-from analisis.modelo_general import entrenar_modelo_general
+#from analisis.modelo_general import entrenar_modelo_general
 from analisis.estadisticas_generales import generar_estadisticas
 from analisis.modelo_economico import entrenar_modelo_economico
 from modelos.evaluar_modelos import evaluar_modelos
@@ -21,26 +21,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 
-modelo_g = entrenar_modelo_general()
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        data = {
-            'f8e_1': request.form.get('f8e_1'),
-            's1': request.form.get('s1'),
-            'p15': request.form.get('p15'),
-            'p24_1': request.form.get('p24_1')
-        }
-
-        df_data = pd.DataFrame([data])
-
-        df_data = df_data[['f8e_1', 's1', 'p15', 'p24_1']] 
-
-        prediccion = modelo_g.predict(df_data)
-
-        resultado = "⚠️ El estudiante tiene alto riesgo de deserción." if prediccion[0] == 1 else "✅Sin riesgo de deserción"
-        return redirect(url_for('resultadoG', resultado=resultado))
-
     return render_template('index.html', resultado=None)
     
     
@@ -68,6 +50,7 @@ def academico():
             'p24_7': request.form.get('p24_7'),
             'p24_8': request.form.get('p24_8')
         }
+        data = {campo: request.form.get(campo) or -1 for campo in data}
         print("Datos recibidos:", data)
         
         input_data = pd.DataFrame([data])
@@ -144,11 +127,11 @@ def personal():
         porcentaje = probabilidad * 100
        
         if probabilidad > 0.7:
-            result = f"⚠️ ⚠️ Riesgo P muy alto de deserción⚠️ ⚠️\n {porcentaje:.2f}%"
+            result = f"⚠️ ⚠️ Riesgo muy alto de deserción⚠️ ⚠️\n {porcentaje:.2f}%"
         elif probabilidad > 0.5:
-            result = f"⚠️ Riesgo P moderado de deserción ⚠️\n{porcentaje:.2f}%"
+            result = f"⚠️ Riesgo moderado de deserción ⚠️\n{porcentaje:.2f}%"
         else:
-            result = f"✅ Riesgo P bajo de deserción✅\n {porcentaje:.2f}%"  
+            result = f"✅ Riesgo bajo de deserción✅\n {porcentaje:.2f}%"  
         
         print("Probabilidad de deserción (clase 1):", prediction_proba[0][1])
         print("Resultado:", result)
@@ -161,14 +144,12 @@ modeloE = entrenar_modelo_economico()
 @app.route('/economico', methods=['GET', 'POST'])
 def economico():
     if request.method == 'POST':
-        # Función para manejar la conversión y valores predeterminados
         def safe_float(value, default=-1):
             try:
                 return float(value) if value != '' else default
             except ValueError:
                 return default
 
-        # Obtener los datos del formulario
         data = {
             'p27': request.form.get('p27'),
             'p29': safe_float(request.form.get('p29')),
@@ -179,19 +160,15 @@ def economico():
         
         }
 
-        # Si la respuesta en p27 es "No", asignar -1 a las otras preguntas
         if data['p27'] == '2':
             data['p29'] = -1
             data['p30'] = -1
             data['p31'] = -1
 
-        # Imprimir los datos para depuración
         print("Datos recibidos:", data)
 
-        # Crear un DataFrame de pandas para usarlo con el modelo
         input_data = pd.DataFrame([data])
 
-        # Predecir la probabilidad de deserción
         prediction_proba = modeloE.predict_proba(input_data)
         
         probabilidad = prediction_proba[0][1]
@@ -282,9 +259,6 @@ def grafico(tipo):
         </html>
     '''
 
-
-
-
 @app.route('/cargar_archivo', methods=['POST'])
 def cargar_archivo():
     archivo = request.files['archivo']
@@ -304,7 +278,6 @@ def descargar_pdf():
             return "No se proporcionaron resultados", 400
 
         html_str = render_template('pdf.html', resultados=resultados)
-        print(html_str)
 
         pdf_file = BytesIO()
         HTML(string=html_str).write_pdf(pdf_file)

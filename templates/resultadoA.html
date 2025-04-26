@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Resultados de Predicción</title>
-    <link rel="stylesheet" href="static/css/bootstrap.min.css">
-</head>
-<body>
-    <h2 style="text-align:center;">Resultados de la Predicción</h2>
+{% extends "base.html" %}
+{% block title %} Resultados de la Predicción {% endblock %}
+
+{% block content %}
+<h2 style="text-align:center;">Resultados de la Predicción</h2>
     <table class="table table-hover">
         <thead>
             <tr class="table-primary">
@@ -28,19 +24,16 @@
         </tbody>
     </table>
 
-    <!-- Almacenamos los resultados en un atributo data-resultados -->
     <div id="datos-resultados" data-resultados='{{ resultados | tojson | safe }}'></div>
 
     <button onclick="descargarPDF()">Descargar como PDF</button>
 
     <script>
         function descargarPDF() {
-            // Obtener el JSON almacenado en el atributo data-resultados
             const raw = document.getElementById("datos-resultados").dataset.resultados;
             const datosResultados = JSON.parse(raw);
 
-            // Realizar la solicitud POST para descargar el PDF
-            fetch("/descargar_pdf", {
+           fetch("/descargar_pdf", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -62,5 +55,6 @@
             });
         }
     </script>
-</body>
-</html>
+{% endblock %}
+
+
