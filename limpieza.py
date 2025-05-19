@@ -47,46 +47,23 @@ def cargar_datos_academicos():
        
         df_desertores["estado"] = "desertor"
         df_concluidos["estado"] = "concluido"
-       # print(" Datos cargados con éxito desde la base de datos.")
+    
 
     except Exception as e:
         print(f" Error al conectar a la base de datos: {e}")
         return None
 
-    #print(" Desertores - Primeros datos:")
-    #print(df_desertores)
-
-    #print("\nConcluidos (antes del rename) - Primeros datos:")
-    #print(df_concluidos)
+   
 
     df_concluidos_renamed = df_concluidos.rename(columns=columnas_equivalentes)
     df_concluidos_renamed = df_concluidos_renamed.loc[:, ~df_concluidos_renamed.columns.duplicated()]
 
     df_concluidos_renamed["estado"] = df_concluidos["estado"]
-    #print("\n Concluidos (después del rename):")
-    #print(df_concluidos_renamed.head())
 
-   
-    #print("\n📌 Columnas comunes entre desertores y concluidos:", list(columnas_comunes))
 
     df_academicos = pd.concat([df_desertores, df_concluidos_renamed], ignore_index=True)
 
-    #print("\n Datos combinados correctamente. Vista previa final:")
-    #print(df_academicos.head())
-
-    #print("\n Valores nulos por columna:")
-    #print(df_academicos.isnull().sum())
-
-    #for columna in df_academicos:
-     #   valores_unicos = df_academicos[columna].unique()
-      #  print(f" {columna} ({len(valores_unicos)} valores únicos): {valores_unicos}")
-
-    #df_filtrado = df_desertores[df_desertores["f21"] == 1]
-
-    #print("\n Valores únicos por columna (solo donde f21 == 1):")
-    #for columna in df_filtrado.columns:
-     #   valores_unicos = df_filtrado[columna].unique()
-      #  print(f"{columna} ({len(valores_unicos)} valores únicos): {valores_unicos}")
+    
 
     conn.close()
     return df_academicos
@@ -142,48 +119,19 @@ def cargar_datos_personales():
         print(f"Error al conectar a la base de datos: {e}")
         return None
 
- #   print(" Desertores - Primeros datos:")
-   # print(df_desertores)
-
-  #  print("\n Concluidos (antes del rename) - Primeros datos:")
-  #  print(df_concluidos)
 
     df_concluidos_renamed = df_concluidos.rename(columns=columnas_equivalentes)
     df_concluidos_renamed = df_concluidos_renamed.loc[:, ~df_concluidos_renamed.columns.duplicated()]
 
 
-#    print("\n Concluidos (después del rename):")
- #   print(df_concluidos_renamed.head())
 
-    #print("\n Columnas comunes entre desertores y concluidos:", list(columnas_comunes))
-
-    
     df_academicos = pd.concat([df_desertores, df_concluidos_renamed], ignore_index=True)
 
-    #print("\n Datos combinados correctamente. Vista previa final:")
-    #print(df_academicos.head())
 
-   # print("\n Valores nulos por columna:")
-   # print(df_academicos.isnull().sum())
-
-   # for columna in df_academicos:
-        #valores_unicos = df_academicos[columna].unique()
-        #print(f" {columna} ({len(valores_unicos)} valores únicos): {valores_unicos}")
-
-    # Filtrar filas donde f21 == 1
-    #df_filtrado = df_desertores[df_desertores["f21"] == 1]
-
-    #print("\n Valores únicos por columna (solo donde f21 == 1):")
-   # for columna in df_filtrado.columns:
-    #    valores_unicos = df_filtrado[columna].unique()
-     #   print(f"{columna} ({len(valores_unicos)} valores únicos): {valores_unicos}")
-
-   # print (df_academicos)
     conn.close()
     return df_academicos
 
-#df=cargar_datos_academicos()
-#print(df)
+
 
 def cargar_datos_personales():
     db_config = {
@@ -225,52 +173,25 @@ def cargar_datos_personales():
         df_concluidos["estado"] = "concluido"
 
         
-        #print("Datos cargados con éxito desde la base de datos.")
+      
 
     except Exception as e:
         print(f"Error al conectar a la base de datos: {e}")
         return None
 
-    # Revisar contenido inicial
-    #print("Desertores - Primeros datos:")
-   # print(df_desertores)
-
-   # print("\n Concluidos (antes del rename) - Primeros datos:")
-    #print(df_concluidos)
-
+  
     df_concluidos_renamed = df_concluidos.rename(columns=columnas_equivalentes)
     
     df_concluidos_renamed = df_concluidos_renamed.loc[:, ~df_concluidos_renamed.columns.duplicated()]
 
 
-    #print("\n Concluidos (después del rename):")
-    #print(df_concluidos_renamed.head())
-
-
 
     df_personales = pd.concat([df_desertores, df_concluidos_renamed], ignore_index=True)
 
-    #print("\n Datos combinados correctamente. Vista previa final:")
-    #print(df_personales.head())
-
-    #print("\n Valores nulos por columna:")
-    #print(df_personales.isnull().sum())
-
-#    for columna in df_personales:
- #       valores_unicos = df_personales[columna].unique()
-  #      print(f" {columna} ({len(valores_unicos)} valores únicos): {valores_unicos}")
-
-    #df_filtrado = df_desertores[df_desertores["f21"] == 1]
-
-    #print("\n Valores únicos por columna (solo donde f21 == 1):")
-   # for columna in df_filtrado.columns:
-    #    valores_unicos = df_filtrado[columna].unique()
-        #print(f" {columna} ({len(valores_unicos)} valores únicos): {valores_unicos}")
+   
 
     conn.close()
     return df_personales
-
-#cargar_datos_personales()
 
 def cargar_datos_generales ():
     db_config = {
@@ -311,38 +232,14 @@ def cargar_datos_generales ():
         print(f" Error al conectar a la base de datos: {e}")
         return None
 
-    # Revisar contenido inicial
-   # print(" Desertores - Primeros datos:")
-    #print(df_desertores)
-
-    #print("\nConcluidos (antes del rename) - Primeros datos:")
-    #print(df_concluidos)
-
+  
     df_concluidos_renamed = df_concluidos.rename(columns=columnas_equivalentes)
     df_concluidos_renamed = df_concluidos_renamed.loc[:, ~df_concluidos_renamed.columns.duplicated()]
     df_general = pd.concat([df_desertores, df_concluidos_renamed], ignore_index=True)
 
-    #print("\n Datos combinados correctamente. Vista previa final:")
-    #print(df_general.head())
-
-    #print("\n Valores nulos por columna:")
-    #print(df_general.isnull().sum())
-
-    #for columna in df_general:
-        #valores_unicos = df_general[columna].unique()
-        #print(f" {columna} ({len(valores_unicos)} valores únicos): {valores_unicos}")
-
-    #df_filtrado = df_desertores[df_desertores["f21"] == 1]
-
-    #print("\n Valores únicos por columna (solo donde f21 == 1):")
-    #for columna in df_filtrado.columns:
-        #valores_unicos = df_filtrado[columna].unique()
-        #print(f"{columna} ({len(valores_unicos)} valores únicos): {valores_unicos}")
-
-
+  
     return df_general
 
-#cargar_datos_generales()
 
 def cargar_datos_economicos():
 
@@ -381,22 +278,17 @@ def cargar_datos_economicos():
         df_desertores["estado"] = "desertor"
         df_concluidos["estado"] = "concluido"
 
-        #print("Datos cargados con éxito desde la base de datos")
 
     except Exception as e:
         print(f"Error al conectar a la base de datos: {e}")
         return None
 
-    # Renombrar columnas de df_concluidos para que coincidan con las de df_desertores
     df_concluidos_renamed = df_concluidos.rename(columns=columnas_equivalentes)
 
-    # Evitar columnas duplicadas al unir
     df_concluidos_renamed = df_concluidos_renamed.loc[:, ~df_concluidos_renamed.columns.duplicated()]
 
-    # Restaurar la columna 'estado' después de renombrar
     df_concluidos_renamed["estado"] = df_concluidos["estado"]
 
-    # Concatenar ambos dataframes
     df_economicos = pd.concat([df_desertores, df_concluidos_renamed], ignore_index=True)
 
     conn.close()

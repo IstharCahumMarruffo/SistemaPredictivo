@@ -176,11 +176,11 @@ def economico():
         porcentaje = probabilidad * 100
         
         if probabilidad > 0.7:
-            result = f"⚠️ ⚠️ Riesgo E muy alto de deserción⚠️ ⚠️\n {porcentaje:.2f}%"
+            result = f"⚠️ ⚠️ Riesgo  muy alto de deserción⚠️ ⚠️\n {porcentaje:.2f}%"
         elif probabilidad > 0.5:
-            result = f"⚠️ Riesgo E moderado de deserción ⚠️\n{porcentaje:.2f}%"
+            result = f"⚠️ Riesgo  moderado de deserción ⚠️\n{porcentaje:.2f}%"
         else:
-            result = f"✅ Riesgo E bajo de deserción✅\n {porcentaje:.2f}%"  
+            result = f"✅ Riesgo  bajo de deserción✅\n {porcentaje:.2f}%"  
         
         
         print("Probabilidad de deserción (clase 1):", prediction_proba[0][1])

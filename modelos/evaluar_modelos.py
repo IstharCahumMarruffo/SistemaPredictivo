@@ -24,7 +24,7 @@ def evaluar_modelos(df):
         ]
     }
 
-    conversor = {0: 'concluido', 1: 'desertor'}
+    conversor = {0: 'concluirá', 1: 'desertará'}
     
     resultados = []
     
@@ -41,7 +41,6 @@ def evaluar_modelos(df):
                 prediccion = modelo.predict(caracteristicas)
                 pred_val = prediccion[0]
 
-                # Convertir predicción correctamente
                 if isinstance(pred_val, (int, float, np.integer, np.floating)):
                     palabra = conversor.get(int(pred_val), str(pred_val))
                 elif isinstance(pred_val, str) and pred_val.lower() in conversor.values():
