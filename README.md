@@ -79,5 +79,5 @@ Email: [istharcahummarruffo@gmail.com]
 ![Resultado de predicción masiva](static/img/resultado_archivo.png)
 
 ### Resultados de predicción masiva (PDF)
-![Resultado de predicción masiva PDF](static/img/pdf_genrdo.png)
+![Resultado de predicción masiva PDF](static/img/pdf_genrado.png)
 
