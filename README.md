@@ -70,7 +70,7 @@ Email: [istharcahummarruffo@gmail.com]
 ![Evaluación individual Académica](static/img/formulario_academico.png)
 
 ### Evaluación de estudiantes (carga masiva)
-![Evaluación masiva](static/images/subir_archivo.png)
+![Evaluación masiva](static/img/subir_archivo.png)
 
 ### Resultados de predicción
 ![Resultado de predicción individual académica](static/img/resultado_academico.png)
@@ -79,5 +79,5 @@ Email: [istharcahummarruffo@gmail.com]
 ![Resultado de predicción masiva](static/img/resultado_archivo.png)
 
 ### Resultados de predicción masiva (PDF)
-![Resultado de predicción masiva PDF](static/img/pdf.png)
+![Resultado de predicción masiva PDF](static/img/pdf_genrdo.png)
 
